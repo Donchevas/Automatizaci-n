@@ -1,0 +1,225 @@
+{
+  "name": "My workflow_Cumpleaños",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 13
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -560,
+        -160
+      ],
+      "id": "23fec14a-cede-4461-99f9-a442ea853e77",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1nCPIN-s5LMgc3UzB14DJ1e73hoa8fgM4GHmZwVeLB7Y",
+          "mode": "list",
+          "cachedResultName": "Saludo de Cumpleaños",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1nCPIN-s5LMgc3UzB14DJ1e73hoa8fgM4GHmZwVeLB7Y/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1nCPIN-s5LMgc3UzB14DJ1e73hoa8fgM4GHmZwVeLB7Y/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        -320,
+        -160
+      ],
+      "id": "6dde1541-7ef7-4ad8-b7f4-3bb9cfee0a58",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "x3kMSERC2CFE1v8j",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "05e73572-0bae-4a5b-865c-63105b8ee3d5",
+              "leftValue": "={{ $json[\"Fecha de Cumpleaños\"].substring(0,5) }}\n",
+              "rightValue": "={{ $now.toFormat('dd/MM') }}\n",
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -100,
+        -160
+      ],
+      "id": "818cd287-aae6-4adf-85fb-35b29c2e0061",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "sendTo": "=Christian.molina.icaza@gmail.com",
+        "subject": "=Nada",
+        "message": "=Noo hay cumpleaños",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        200,
+        -20
+      ],
+      "id": "96359a75-564d-4ccc-bef7-8ec28a0a146e",
+      "name": "Gmail1",
+      "webhookId": "0ca6b546-ec06-42de-84fd-7c034e7ed81e",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "Atykz3XInGl5cHr4",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{$json[\"Correo2\"]}}",
+        "subject": "=¡Feliz cumpleaños {{ $json['Nombre '] }}",
+        "message": "=¡Hola!{{ $json['Nombre '] }} 🎉🎂  Todo el equipo te desea un feliz cumpleaños lleno de éxitos y alegrías.   ¡Esperamos que disfrutes muchísimo tu día!  Un abrazo fuerte.  ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        220,
+        -240
+      ],
+      "id": "7bfa2e53-07b9-44e4-8407-d4db127f228f",
+      "name": "Gmail",
+      "webhookId": "0ca6b546-ec06-42de-84fd-7c034e7ed81e",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "Atykz3XInGl5cHr4",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "from": "+14155238886",
+        "to": "+51997503592",
+        "toWhatsapp": true,
+        "message": "por fin saludos",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.twilio",
+      "typeVersion": 1,
+      "position": [
+        480,
+        -240
+      ],
+      "id": "a409bb60-7789-4738-ad8e-dcb13f2a5db9",
+      "name": "Twilio",
+      "credentials": {
+        "twilioApi": {
+          "id": "SE4h0VkgB6x0NFuJ",
+          "name": "Twilio account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Gmail1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail": {
+      "main": [
+        [
+          {
+            "node": "Twilio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "c20dfc4a-9d19-4c5a-8346-d790ec047a73",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "2ada1fd986555a5505fbb4d22dfb9e970e12f53289d048420873b11183875a96"
+  },
+  "id": "8iOWl745oCaPPcJW",
+  "tags": []
+}
